@@ -7,7 +7,7 @@ I am building on top of https://github.com/nikhil-sethi/xflrpy, a python-friendl
 # Current Stage
 
 The project is currently in early stages of development. So far, it is possible to connect to XFLR5 and 
-converse with an AI bot that can call basic tools in XFLR5 ("Change the chord of the midsection of this airplane to 2 meters"). See an example below:
+converse with an AI bot that can call basic tools in XFLR5 ("Change the chord of the midsection of this airplane to 2 meters").
 
 # TODO
 
