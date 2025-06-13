@@ -1,6 +1,6 @@
 # Telos
 
-A Python-based project for LLM-based automation of CFD optimization of plane-like drones. (drop airfoils, get optimized aircraft for the specific requirements). I am building this for my aeroengineering friends, hoping to speed up their design cycles so that we can all have more cool hardware stuff (personally, I find it reprehensible that my hardware friends are blocked by the low-level BS in old software instead of having JARVIS-style support. They should be the cool kids building stuff from garages, just like I can write software with a laptop)
+A Python-based project for LLM-based automation of CFD optimization of plane-like drones. (drop airfoils in, get aircraft optimized for specific requirements out). I am building this for my aeroengineering friends, hoping to speed up their design cycles so that we can all have more cool hardware stuff flying around (personally, I find it reprehensible that my hardware friends are blocked by the low-level BS in old software instead of having JARVIS-style support. They should be the cool kids building stuff from garages, just like I can write software with a laptop)
 
 I am building on top of https://github.com/nikhil-sethi/xflrpy, a python-friendly version of XFLR5
 
