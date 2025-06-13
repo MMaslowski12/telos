@@ -83,27 +83,6 @@ The program will:
 2. Initialize the analysis environment
 3. Start an interactive chat loop for optimization
 
-## Features
-
-- Automated airplane setup and configuration
-- Interactive optimization through chat interface
-- Support for various aerodynamic parameters:
-  - Wing geometry modifications
-  - Airfoil selection
-  - Center of mass adjustments
-  - Multiple wing sections
-
-## Development
-
-This project is built on top of [XFLRpy](https://github.com/nikhil-sethi/xflrpy), a Python-enabled version of XFLR5 for scripting and design optimization. The project uses the RPC (Remote Procedure Call) approach for communication between Python and XFLR5, which provides better performance and flexibility compared to the older PythonQt approach.
-
-Future development plans include:
-- Enhanced optimization algorithms
-- Additional aerodynamic analysis methods
-- Improved error handling and debugging
-- More comprehensive documentation
-- Integration with other aerodynamic analysis tools
-
 ## License
 
 This project is licensed under the GNU General Public License v3.0 - see the [License.txt](License.txt) file for details.
