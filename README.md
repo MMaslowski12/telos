@@ -4,12 +4,12 @@ A Python-based project for LLM-based automation of CFD optimization of plane-lik
 
 I am building on top of https://github.com/nikhil-sethi/xflrpy, a python-friendly version of XFLR5
 
-# Current Stage
+## Current Stage
 
 The project is currently in early stages of development. So far, it is possible to connect to XFLR5 and 
 converse with an AI bot that can call basic tools in XFLR5 ("Change the chord of the midsection of this airplane to 2 meters").
 
-# TODO
+## TODO
 
 SHORT TERM: (~mid June 2025)
 - Add the ability to calculate lift and drag at constant velocities
@@ -23,16 +23,7 @@ BACKLOG:
 - Add visualization tools (make the LLM "see" the aircraft as it designs it)
 - Add the capability of the model to choose its own airfoils (instead of scraping it from the NASA database as my friends already do it)
 
-## Overview
-
-This project provides tools for aerodynamic analysis and optimization of aircraft designs using XFLR5/XFLRpy. It includes functionality for:
-- Setting up and managing airplane configurations
-- Running aerodynamic analyses
-- Interactive chat-based optimization
-- Various aerodynamic tools and utilities
-
 ## Prerequisites
-
 - Python 3.x
 - XFLR5/XFLRpy 0.48
 - OpenAI API access
