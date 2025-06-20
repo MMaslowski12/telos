@@ -22,7 +22,7 @@ your programs, too.
 [... Full GPL-3.0 text omitted for brevity ...]
 
 Telos - LLM-based aerodynamic analysis and AI optimization
-Copyright (C) 2024  Michał Masłowski
+Copyright (C) 2025  Michał Masłowski
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
