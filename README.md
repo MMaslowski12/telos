@@ -1,114 +1,114 @@
-# Telos - AI-Powered Aircraft Design Assistant
+# Telos
 
-Telos is your AI co-pilot for aircraft design and optimization. It combines the power of Computational Fluid Dynamics (CFD) with natural language processing to help you design and optimize aircraft more efficiently.
+A Python-based project for LLM-based automation of CFD optimization of plane-like drones. (drop airfoils, get optimized aircraft for the specific requirements). I am building this for my aeroengineering friends, hoping to speed up their design cycles so that we can all have more cool hardware stuff (personally, I find it reprehensible that my hardware friends are blocked by the low-level BS in old software instead of having JARVIS-style support)
 
-## 🚀 Quick Start
+I am building on top of https://github.com/nikhil-sethi/xflrpy, a python-friendly version of XFLR5
 
-1. **Install Dependencies**
-   ```bash
-   # Clone the repository
-   git clone https://github.com/MMaslowski12/telos.git
-   cd Telos
+# Current Stage
 
-   # Install Python packages
-   pip install -r requirements.txt
-   ```
+The project is currently in early stages of development. So far, it is possible to connect to XFLR5 and converse with an AI bot that can call basic tools in XFLR5 ("Change the chord of the midsection of this airplane to 2 meters"). See an example below:
 
-2. **Set Up XFLRpy**
-   - **macOS**: XFLRpy is pre-built in the repository
-   - **Linux/Windows**: Build from [XFLRpy source](https://github.com/nikhil-sethi/xflrpy)
+# TODO
 
-3. **Configure API**
-   - Create a `.env` file in the project root
-   - Add your API key: `OPENAI_API_KEY=your_key_here`
+SHORT TERM: (~mid June 2025)
+- Add the ability to calculate lift and drag at constant velocities
+- Create the LLM that can execute single commands: "Make the lift-drag positive in this aircraft at 8ms-2"
 
-4. **Set Up Google Sheets Integration (Optional)**
-   ```bash
-   # 1. Create a Google Service Account
-   # - Go to Google Cloud Console
-   # - Enable Google Sheets API
-   # - Create Service Account and download JSON credentials
-   
-   # 2. Share your Google Sheet with the service account email
-   
-   # 3. Update config.py with your credentials
-   cp config_example.py config.py
-   # Edit config.py with your actual values
-   
-   # 4. Test the integration
-   python gsheet_setup.py
-   ```
+LONG TERM: (~end of June/July 2025)
+- Specialize the LLM in aerodynamics using notes from meetings with my aeroengineering friends
+- Step up the autonomous model: "Using these airfoils for wings, elevators, and fins, construct an airplane that could carry a 2kg payload with maximum range / an airplane that can carry the highest payload"
 
-5. **Run the Application**
-   ```bash
-   # Terminal 1: Start XFLRpy
-   xflrpy/xflrpy.app/Contents/MacOS/xflrpy
+BACKLOG:
+- Add visualization tools (make the LLM "see" the aircraft as it designs it)
+- Add the capability of the model to choose its own airfoils (instead of scraping it from the NASA database as my friends already do it)
 
-   # Terminal 2: Start Telos
-   python main.py
-   ```
+## Overview
 
-## 💡 What You Can Do
+This project provides tools for aerodynamic analysis and optimization of aircraft designs using XFLR5/XFLRpy. It includes functionality for:
+- Setting up and managing airplane configurations
+- Running aerodynamic analyses
+- Interactive chat-based optimization
+- Various aerodynamic tools and utilities
 
-- Modify aircraft parameters using natural language
-- Optimize lift and drag characteristics
-- Design aircraft for specific requirements
-- Get AI-powered suggestions for improvements
-
-### Example Commands
-```bash
-"Change the chord of the midsection to 2 meters"
-"Make the lift-drag positive at 8ms-2"
-"Optimize the wing for maximum lift"
-```
-
-## 🛠️ Technical Requirements
+## Prerequisites
 
 - Python 3.x
 - XFLR5/XFLRpy 0.48
-- OpenAI API access (or compatible LLM API)
+- OpenAI API access
 
-## 📁 Project Structure
+## Installation
 
-```
-telos/
-├── main.py              # Application entry point
-├── delphi.py            # Interactive chat interface
-├── tools.py             # Aerodynamic analysis tools
-├── environment.py       # Aircraft environment setup
-├── components.py        # Aircraft component definitions
-├── utils.py             # Utility functions
-├── gsheet_setup.py      # Google Sheets integration setup
-├── config_example.py    # Configuration template
-└── requirements.txt     # Python dependencies
+1. Clone the repository:
+```bash
+git clone https://github.com/MMaslowski12/telos.git
+cd Telos
 ```
 
-## 🎯 Current Features
+2. Install the required Python packages:
+```bash
+pip install -r requirements.txt
+```
 
-- Natural language interface for aircraft modification
-- Basic aerodynamic parameter adjustments
-- Interactive optimization chat loop
-- Integration with XFLR5 for CFD analysis
+3. Install XFLR5/XFLRpy:
 
-## 🔜 Coming Soon
+### macOS
+For macOS users, XFLRpy is already built, run it with:
+xflrpy/xflrpy.app/Contents/MacOS/xflrpy
 
-- Lift and drag calculations at constant velocities
-- Specialized aerodynamics LLM
-- Autonomous aircraft design capabilities
-- Visualization tools
-- Automatic airfoil selection
+You should run xflrpy (the modified xflr5) in one terminal, and main.py in the other
 
-## 🤝 Contributing
+### Linux and Windows
+For Linux and Windows users, you'll need to build XFLRpy from source. For further details, look at the original xflrpy repo
 
-Contributions are welcome! Feel free to:
-- Submit issues
-- Propose enhancements
-- Create pull requests
+4. Add your Deepseek API key to .env (or any other model, but make sure to change the URL in the openAI client)
 
-## 📝 License
+## Project Structure
 
-This project is licensed under the GNU General Public License v3.0. See [License.txt](License.txt) for details.
+- `main.py` - Main entry point and project configuration
+- `delphi.py` - Chat loop implementation for interactive optimization
+- `tools.py` - Core aerodynamic tools and analysis functions
+- `utils.py` - Utility functions
+- `smietnik.py` - Additional utilities and helper functions. feel free to ignore
 
-## 🙏 Acknowledgments
+## Usage
 
-Built on top of [XFLRpy](https://github.com/nikhil-sethi/xflrpy), which is also licensed under the GNU General Public License v3.0. 
+Run the main script:
+```bash
+python main.py
+```
+
+The program will:
+1. Set up a new airplane configuration
+2. Initialize the analysis environment
+3. Start an interactive chat loop for optimization
+
+## Features
+
+- Automated airplane setup and configuration
+- Interactive optimization through chat interface
+- Support for various aerodynamic parameters:
+  - Wing geometry modifications
+  - Airfoil selection
+  - Center of mass adjustments
+  - Multiple wing sections
+
+## Development
+
+This project is built on top of [XFLRpy](https://github.com/nikhil-sethi/xflrpy), a Python-enabled version of XFLR5 for scripting and design optimization. The project uses the RPC (Remote Procedure Call) approach for communication between Python and XFLR5, which provides better performance and flexibility compared to the older PythonQt approach.
+
+Future development plans include:
+- Enhanced optimization algorithms
+- Additional aerodynamic analysis methods
+- Improved error handling and debugging
+- More comprehensive documentation
+- Integration with other aerodynamic analysis tools
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 - see the [License.txt](License.txt) file for details.
+
+This project is built on top of [XFLRpy](https://github.com/nikhil-sethi/xflrpy), which is also licensed under the GNU General Public License v3.0.
+
+## Contributing
+
+Feel free to submit issues and enhancement requests! 
