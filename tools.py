@@ -52,7 +52,7 @@ class ToolManager:
     # --------------------------------------------------------------------- #
     def setup_airplane(
         self,
-        plane_name: Optional[str] = None,
+        plane_name: str = "",
         sec0_foil_name: str = "E387",
         sec0_chord: float = 0.2,
         sec1_chord: float = 0.1,
@@ -63,7 +63,7 @@ class ToolManager:
         sec1_foil_name: str = "E387",
     ) -> Tuple[Plane, Dict]:
         """Create a new plane and add it to the project, returning plane + data."""
-        if plane_name is None:
+        if not plane_name:
             plane_name = self.plane_name
 
         plane = Plane(name=plane_name)
@@ -128,10 +128,10 @@ class ToolManager:
         section: int,
         attribute: str,
         value: Union[float, str],
-        plane_name: Optional[str] = None,
+        plane_name: str = "",
     ) -> Plane:
         """Change a single attribute on a given wing/elevator/fin section."""
-        if plane_name is None:
+        if not plane_name:
             plane_name = self.plane_name
 
         plane = self.miarex.plane_mgr.getPlane(plane_name)
@@ -150,13 +150,13 @@ class ToolManager:
     def perform_analysis(
         self,
         analysis_name: str,
-        plane_name: Optional[str] = None,
+        plane_name: str = "",
         start_alpha: float = -10.0,
         end_alpha: float = 20.0,
         delta_alpha: float = 0.5,
     ) -> List[Dict[str, float]]:
         """Run a fixed‑speed VLM polar over a range of alpha and return results."""
-        if plane_name is None:
+        if not plane_name:
             plane_name = self.plane_name
 
         wpolar = WPolar(name=analysis_name, plane_name=plane_name)
@@ -190,21 +190,20 @@ class ToolManager:
     # --------------------------------------------------------------------- #
     def add_point_masses(
         self,
-        point_masses: Optional[List[Dict[str, Any]]] = None,
-        plane_name: Optional[str] = None,
+        point_masses: List[Dict[str, Any]],
+        plane_name: str = "",
     ) -> bool:
         """Add arbitrary point masses to a plane so XFLR5 can compute inertia."""
-        if plane_name is None:
+        if not plane_name:
             plane_name = self.plane_name
 
-        if point_masses:
-            for pm in point_masses:
-                point_mass = PointMass(
-                    mass=pm["mass"],
-                    position=Vector3d(*pm["position"]),
-                    tag=pm.get("tag", ""),
-                )
-                self.miarex.plane_mgr.add_point_mass(plane_name, point_mass)
+        for pm in point_masses:
+            point_mass = PointMass(
+                mass=pm["mass"],
+                position=Vector3d(*pm["position"]),
+                tag=pm.get("tag", ""),
+            )
+            self.miarex.plane_mgr.add_point_mass(plane_name, point_mass)
         return True
 
 

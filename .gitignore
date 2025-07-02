@@ -8,5 +8,5 @@ venv/
 .venv/
 .DS_Store
 *.log
-setup/service-account-credentials.json
+*.json
 

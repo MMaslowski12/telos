@@ -10,11 +10,11 @@ The project is currently in early stages of development. So far, it is possible 
 
 # TODO
 
-SHORT TERM: (~mid June 2025)
+SHORT TERM: (~mid July 2025)
 - Add the ability to calculate lift and drag at constant velocities
 - Create the LLM that can execute single commands: "Make the lift-drag positive in this aircraft at 8ms-2"
 
-LONG TERM: (~end of June/July 2025)
+LONG TERM: (~end of July 2025)
 - Specialize the LLM in aerodynamics using notes from meetings with my aeroengineering friends
 - Step up the autonomous model: "Using these airfoils for wings, elevators, and fins, construct an airplane that could carry a 2kg payload with maximum range / an airplane that can carry the highest payload"
 

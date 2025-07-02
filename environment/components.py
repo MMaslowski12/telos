@@ -37,25 +37,6 @@ g = 9.80665                               # gravity [m/s²]  (I10, I22 …)
 class Component:
     """Base class for all components in the system."""
 
-    def __post_init__(self):
-        """Initialize non-derivative values from Google Sheets if worksheet is provided."""
-        if hasattr(self, 'worksheet'):
-            for field_info in fields(self):
-                if 'cell' not in field_info.metadata:
-                    continue
-                
-                # Skip derivative fields
-                if field_info.metadata.get('derivative', False):
-                    continue
-                
-                cell_ref = field_info.metadata['cell']
-                try:
-                    value = self.worksheet.acell(cell_ref).value
-                    if value:
-                        setattr(self, field_info.name, float(value))
-                except Exception as e:
-                    warnings.warn(f"Could not read cell {cell_ref}: {str(e)}")
-
     def update_all(self) -> None:
         """Update all calculated values for this component."""
         for method_name in dir(self):
@@ -112,8 +93,6 @@ class Component:
         Args:
             worksheet: The Google Sheets worksheet to read from
         """
-        self.worksheet = worksheet
-        
         # Get all fields from the dataclass
         for field_info in fields(self):
             # Skip fields without cell metadata
@@ -235,8 +214,26 @@ class Propulsion(Component):
     prop_thrust_gen_g: float = cell('K9')        # K9
     battery_energy_J: float = cell('I3')         # I3  (passed as attr)
     battery_efficiency: float = cell('I5')  # I5 (stored only)
+    power_required_W: float = cell('I11', derivative=True)  # I11
+    power_available_W: float = cell('I12', derivative=True)  # I12
     propulsive_efficiency: float = cell('I6', derivative=True)  # I6
     thrust_N: float = cell('I10', derivative=True)  # I10
+    
+    # Reference to environment for dependencies
+    environment: Optional['Environment'] = None
+
+    def update_all(self) -> None:
+        """Override to handle parameter-dependent updates."""
+        # Get cruise speed from environment
+        if hasattr(self, 'environment') and self.environment:
+            cruise_speed = self.environment.cruise_speed_mps
+            # Update propulsive efficiency with cruise speed
+            self.update_propulsive_efficiency(cruise_speed)
+        
+        # Update other methods that don't need parameters
+        self.update_thrust_N()
+        self.update_power_required_W()
+        self.update_power_available_W()
 
     @updater
     def update_propulsive_efficiency(self, V: float) -> None:
@@ -246,6 +243,23 @@ class Propulsion(Component):
     def update_thrust_N(self) -> None:
         kg_equiv = self.prop_thrust_gen_g * (self.cruise_throttle**2) / 1000.0
         self.thrust_N = kg_equiv * g
+
+    @updater
+    def update_power_required_W(self) -> None:
+        """Power Required [W] = cruise_drag * cruise_speed_mps (I23 * I16)"""
+        # We need to get cruise_drag from aerodynamics and cruise_speed from environment
+        if hasattr(self, 'environment') and self.environment:
+            cruise_drag = self.environment.aero.cruise_drag
+            cruise_speed = self.environment.cruise_speed_mps
+            self.power_required_W = cruise_drag * cruise_speed
+
+    @updater
+    def update_power_available_W(self) -> None:
+        """Power Available [W] = cruise_speed_mps * thrust_N (I16 * I10)"""
+        # We need to get cruise_speed from environment
+        if hasattr(self, 'environment') and self.environment:
+            cruise_speed = self.environment.cruise_speed_mps
+            self.power_available_W = cruise_speed * self.thrust_N
 
 
 # ───────────────────────────────  INERTIA  ────────────────────────────────
@@ -259,8 +273,6 @@ class Inertia(Component):
     electronics_mass_kg: float = cell('C11')     # C11
     fuselage_mass_kg: float = cell('C12')        # C12
     payload_mass_kg: float = cell('C13')   # C13
-    power_required_W: Optional[float] = cell('I11')  # I11
-    power_available_W: Optional[float] = cell('I12')  # I12
     wing_mass: float = cell('C4', derivative=True)  # C4
     elevator_mass: float = cell('C5', derivative=True)  # C5
     rudder_mass: float = cell('C6', derivative=True)  # C6
@@ -268,6 +280,17 @@ class Inertia(Component):
     
     # Reference to environment for dependencies
     environment: Optional['Environment'] = None
+
+    def update_all(self) -> None:
+        """Override to ensure dependencies are available."""
+        # Make sure wing, stab, and fin volumes are calculated first
+        if hasattr(self, 'environment') and self.environment:
+            self.environment.wing.update_all()
+            self.environment.stab.update_all()
+            self.environment.fin.update_all()
+        
+        # Now update our own values
+        super().update_all()
 
     @updater
     def update_wing_mass(self) -> None:
@@ -289,10 +312,6 @@ class Inertia(Component):
                 self.electronics_mass_kg + self.fuselage_mass_kg +
                 self.payload_mass_kg)
 
-    def set_power_numbers(self, P_req: float, P_avail: float):
-        self.power_required_W = P_req   # I11
-        self.power_available_W = P_avail  # I12
-
 
 # ────────────────────────────  AERODYNAMICS  ──────────────────────────────
 @dataclass
@@ -311,6 +330,17 @@ class Aerodynamics(Component):
     
     # Reference to environment for dependencies
     environment: Optional['Environment'] = None
+
+    def update_all(self) -> None:
+        """Override to ensure dependencies are available."""
+        # Make sure atmosphere and inertia are calculated first
+        if hasattr(self, 'environment') and self.environment:
+            self.environment.atmosphere.update_all()
+            self.environment.inertia.update_all()
+            self.environment.propulsion.update_all()
+        
+        # Now update our own values
+        super().update_all()
 
     @updater
     def update_cruise_lift(self) -> None:
@@ -342,9 +372,3 @@ class Aerodynamics(Component):
     def update_endurance_seconds(self) -> None:
         prop = self.environment.propulsion
         self.endurance_seconds = prop.battery_energy_J / (prop.motor_power_draw_W * prop.cruise_throttle)
-
-    def update_inertia_power(self):
-        self.environment.inertia.set_power_numbers(
-            self.cruise_power_required,
-            self.cruise_power_available
-        )
