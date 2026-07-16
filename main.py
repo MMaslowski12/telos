@@ -1,5 +1,6 @@
 '''
 xflrpy/xflrpy.app/Contents/MacOS/xflrpy
+/Users/mmaslowski/Documents/GitHub/Telos/xflrpy/xflrpy.app/Contents/MacOS/xflrpy
 '''
 
 from tools import ToolManager
@@ -61,21 +62,18 @@ if __name__ == "__main__":
     tm = ToolManager(project_path, project_name, plane_name)
     plane, plane_data = tm.setup_airplane()
 
-    print("Plane name: ", plane_name)
-    chat_loop(tm)
-
+    # print("Plane name: ", plane_name)
+    # chat_loop(tm)
 
 
 '''
 TODO
 
-TODAY:
--> Understand the tool calling mess by actually undeerstanding the code. Read through the docs
--> Refactor main
--> Test it to tell me more about the plane, change basic shit
--> Plug it in to gsheets. See if fetching works
+-> Make it work
+-> Add (see_plane)
+-> Talk with the bros what they'd like (force them like in April)
+-> run the first loop
 
--> Update tools to what's there below
 '''
 
 
